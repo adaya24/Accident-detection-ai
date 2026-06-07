@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOS Alerts - CrashCall</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+    header {
+      background-color: #dc3545;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      background-color: #343a40;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    section {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    .sos-message {
+      background-color: #fff3f3;
+      border: 1px solid #dc3545;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SOS Alerts</h1>
+  </header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="sos.html">SOS Alerts</a>
+    <a href="map.html">Accident Map</a>
+    <a href="hospitals.html">Our Hospitals</a>
+  </nav>
+  <section>
+    <h2>Live SOS Messages</h2>
+    <div id="sos-list">Loading...</div>
+  </section>
+
+  <script>
+    fetch('sos_data.json')
+      .then(response => response.json())
+      .then(data => {
+        const list = document.getElementById('sos-list');
+        list.innerHTML = '';
+
+        if (data.length === 0) {
+          list.innerHTML = '<p>No SOS messages yet.</p>';
+          return;
+        }
+
+        data.forEach(msg => {
+          const div = document.createElement('div');
+          div.className = 'sos-message';
+          div.innerHTML = `
+            <strong>🚨 Accident Detected</strong><br>
+            Location: ${msg.location}<br>
+            Time: ${msg.time}
+          `;
+          list.appendChild(div);
+        });
+      })
+      .catch(error => {
+        document.getElementById('sos-list').innerHTML = 
+          "Unable to load SOS messages.";
+      });
+  </script>
+</body>
+</html>
